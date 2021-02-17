@@ -27,10 +27,10 @@ pipeline {
         container('git') {
           withCredentials([usernamePassword(credentialsId: 'git-credentials-acm', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
             sh "git config --global user.email ${env.GITHUB_USER_EMAIL}"
-            sh "git clone http://${GIT_USERNAME}:${GIT_PASSWORD}@${env.BASTION_IP}:3000/${env.GITHUB_ORGANIZATION}/k8s-deploy-staging"
+            sh "git clone http://${GIT_USERNAME}:${GIT_PASSWORD}@${env.BASTION_IP}/${env.GITHUB_ORGANIZATION}/k8s-deploy-staging"
             sh "cd k8s-deploy-staging/ && sed -i 's#image: .*#image: ${env.TAG_STAGING}#' ${env.APP_NAME}.yml"
             sh "cd k8s-deploy-staging/ && git add ${env.APP_NAME}.yml && git commit -m 'Update ${env.APP_NAME} version ${env.VERSION}'"
-            sh "cd k8s-deploy-staging/ && git push http://${GIT_USERNAME}:${GIT_PASSWORD}@${env.BASTION_IP}:3000/${env.GITHUB_ORGANIZATION}/k8s-deploy-staging"
+            sh "cd k8s-deploy-staging/ && git push http://${GIT_USERNAME}:${GIT_PASSWORD}@${env.BASTION_IP}/${env.GITHUB_ORGANIZATION}/k8s-deploy-staging"
           }
         }
       }
